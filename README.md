@@ -1,4 +1,4 @@
-# Lottery KH - Cambodian Lottery Results App (លទ្ធផលឆ្នោត)
+# Lottery KH - Cambodian Lottery Results App (??????? If ??? If ??? If )
 
 Android app displaying Khmer lottery results for Vietnam and Malaysia draws.
 
@@ -67,7 +67,7 @@ Output: `app/build/outputs/bundle/release/app-release.aab`
    - One-time $25 registration fee
    
 2. **Create a new app** in Google Play Console:
-   - App name: "លទ្ធផលឆ្នោត"
+   - App name: "???????????"
    - Default language: Khmer
    - App type: App
    - Free or Paid: Free

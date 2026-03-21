@@ -4,7 +4,9 @@
         <item name="colorPrimary">@color/red_primary</item>
         <item name="colorPrimaryDark">@color/red_dark</item>
         <item name="colorAccent">@color/blue_number</item>
-        <item name="android:statusBarColor">@color/red_dark</item>
-        <item name="android:navigationBarColor">@color/red_dark</item>
+        <item name="android:statusBarColor">@color/toolbar_dark</item>
+        <item name="android:navigationBarColor">@color/toolbar_dark</item>
+        <item name="android:fontFamily">@font/kantumruy_pro_family</item>
+        <item name="fontFamily">@font/kantumruy_pro_family</item>
     </style>
 </resources>

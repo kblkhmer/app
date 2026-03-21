@@ -18,3 +18,14 @@ local.properties
 
 # OS
 Thumbs.db
+
+# Dev tools & temp files
+jdk11/
+jdk11.zip
+legacy.security
+pepk.jar
+proxy.js
+push-via-api.ps1
+screen*.png
+ui*.xml
+app/keystore/

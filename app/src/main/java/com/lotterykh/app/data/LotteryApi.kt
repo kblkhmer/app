@@ -9,7 +9,7 @@ import java.net.URL
 
 object LotteryApi {
 
-    private const val API_URL = "https://lottery.yournews.asia/admin/api/result.php"
+    private const val API_URL = "http://localhost:8080/"
 
     fun fetchResults(): ApiResponse {
         val url = URL(API_URL)

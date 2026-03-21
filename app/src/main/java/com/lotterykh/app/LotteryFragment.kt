@@ -108,7 +108,9 @@ class LotteryFragment : Fragment() {
         tvSession.background = ContextCompat.getDrawable(requireContext(), R.drawable.session_badge_bg)
 
         val tvDate = cardView.findViewById<TextView>(R.id.tvDate)
-        tvDate.text = "Date:  ${draw.date}"
+        val parts = draw.date.split("-")
+        val formattedDate = if (parts.size == 3) "${parts[2]}-${parts[1]}-${parts[0]}" else draw.date
+        tvDate.text = "Date:  $formattedDate"
 
         val prizeContainer = cardView.findViewById<LinearLayout>(R.id.prizeContainer)
 

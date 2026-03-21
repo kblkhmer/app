@@ -42,3 +42,19 @@ data class ApiGroup(
     val status: String,
     val resultLo: String? = null
 )
+
+// Ads models
+data class AdsResponse(
+    val total: Int,
+    val ads: List<Ad>
+)
+
+data class Ad(
+    val id: Int,
+    val title: String,
+    val imageUrl: String,
+    val linkUrl: String,
+    val position: String,
+    val duration: Int,
+    val displayOrder: Int
+)
