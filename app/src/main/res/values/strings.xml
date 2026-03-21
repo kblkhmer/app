@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">???????????</string>
+    <string name="tab_vietnam">??????</string>
+    <string name="tab_malaysia">????????</string>
+    <string name="morning">?????</string>
+    <string name="evening">?????</string>
+    <string name="prize_a">??? If A</string>
+    <string name="prize_b">??? If B</string>
+    <string name="prize_c">??? If C</string>
+    <string name="prize_d">??? If D</string>
+    <string name="two_digit_a">??? If A</string>
+</resources>

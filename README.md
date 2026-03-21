@@ -1,4 +1,4 @@
-# Lottery KH - Cambodian Lottery Results App (លទ្ធផលឆ If សាន If ទិត If )
+# Lottery KH - Cambodian Lottery Results App (??????? If ??? If ??? If )
 
 Android app displaying Khmer lottery results for Vietnam and Malaysia draws.
 
@@ -27,7 +27,7 @@ cd lottery-kh
 keytool -genkeypair -v -keystore app/keystore/release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias lottery-kh
 ```
 
-You'll be prompted for passwords. **Save these securely — you cannot recover them.**
+You'll be prompted for passwords. **Save these securely ? you cannot recover them.**
 
 ### Step 2: Configure Signing
 
@@ -67,34 +67,34 @@ Output: `app/build/outputs/bundle/release/app-release.aab`
    - One-time $25 registration fee
    
 2. **Create a new app** in Google Play Console:
-   - App name: "លទ If If If If If សាន If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If"
+   - App name: "?? If If If If If ??? If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If If"
    - Default language: Khmer
    - App type: App
    - Free or Paid: Free
 
 ### Upload for Internal Testing (No Review!)
 
-1. Go to **Google Play Console** → Your App
-2. Navigate to **Testing** → **Internal testing**
+1. Go to **Google Play Console** ? Your App
+2. Navigate to **Testing** ? **Internal testing**
 3. Click **Create new release**
 4. Upload the `app-release.aab` file
 5. Add release notes (e.g., "Initial internal test build")
-6. Click **Review release** → **Start rollout to Internal testing**
+6. Click **Review release** ? **Start rollout to Internal testing**
 
 ### Add Internal Testers
 
-1. Go to **Internal testing** → **Testers** tab
+1. Go to **Internal testing** ? **Testers** tab
 2. Create an email list with tester email addresses
 3. Share the **opt-in link** with testers
-4. Testers click the link → install from Play Store
+4. Testers click the link ? install from Play Store
 
-**Internal testing releases are available immediately — no Google review required!**
+**Internal testing releases are available immediately ? no Google review required!**
 
 ### Important Notes
 
 - Internal testing supports up to **100 testers**
 - Testers must use the **same Google account** as the email you added
-- The app won't appear in Play Store search — only accessible via the opt-in link
+- The app won't appear in Play Store search ? only accessible via the opt-in link
 - You can push updates instantly without any review
 
 ---
@@ -112,24 +112,24 @@ Output: `app/build/outputs/bundle/release/app-release.aab`
 
 ```
 lottery-kh/
-├── app/
-│   ├── build.gradle.kts          # App build config
-│   ├── proguard-rules.pro        # ProGuard rules
-│   └── src/main/
-│       ├── AndroidManifest.xml
-│       ├── java/com/lotterykh/app/
-│       │   ├── MainActivity.kt        # Main entry point
-│       │   ├── LotteryFragment.kt     # Displays lottery draws
-│       │   ├── LotteryPagerAdapter.kt # ViewPager adapter
-│       │   ├── data/
-│       │   │   └── SampleData.kt      # Sample lottery data
-│       │   └── model/
-│       │       └── LotteryModels.kt   # Data classes
-│       └── res/
-│           ├── layout/                # XML layouts
-│           ├── values/                # Colors, strings, themes
-│           └── drawable/              # Drawables & icons
-├── build.gradle.kts              # Root build file  
-├── settings.gradle.kts
-└── gradle.properties
+??? app/
+?   ??? build.gradle.kts          # App build config
+?   ??? proguard-rules.pro        # ProGuard rules
+?   ??? src/main/
+?       ??? AndroidManifest.xml
+?       ??? java/com/lotterykh/app/
+?       ?   ??? MainActivity.kt        # Main entry point
+?       ?   ??? LotteryFragment.kt     # Displays lottery draws
+?       ?   ??? LotteryPagerAdapter.kt # ViewPager adapter
+?       ?   ??? data/
+?       ?   ?   ??? SampleData.kt      # Sample lottery data
+?       ?   ??? model/
+?       ?       ??? LotteryModels.kt   # Data classes
+?       ??? res/
+?           ??? layout/                # XML layouts
+?           ??? values/                # Colors, strings, themes
+?           ??? drawable/              # Drawables & icons
+??? build.gradle.kts              # Root build file  
+??? settings.gradle.kts
+??? gradle.properties
 ```

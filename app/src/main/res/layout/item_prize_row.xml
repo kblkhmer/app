@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <!-- Label: ??? If A, B, C, D -->
+    <TextView
+        android:id="@+id/tvPrizeLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- 2-digit number -->
+    <TextView
+        android:id="@+id/tvTwoDigit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:textColor="#1A1A1A"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <!-- 3-digit number -->
+    <TextView
+        android:id="@+id/tvThreeDigit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:textColor="@color/blue_number"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+</LinearLayout>
