@@ -2,33 +2,38 @@ package com.lotterykh.app
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.lotterykh.app.data.SampleData
+import com.lotterykh.app.data.LotteryApi
 import com.lotterykh.app.databinding.FragmentLotteryBinding
 import com.lotterykh.app.model.LotteryDraw
 import com.lotterykh.app.model.LotteryResult
-import com.lotterykh.app.model.Session
+import kotlin.concurrent.thread
 
 class LotteryFragment : Fragment() {
 
     private var _binding: FragmentLotteryBinding? = null
     private val binding get() = _binding!!
 
-    private var resultIndex: Int = 0
+    private var lotteryCode: String = ""
+    private var lotteryTitle: String = ""
 
     companion object {
-        private const val ARG_INDEX = "result_index"
+        private const val ARG_CODE = "lottery_code"
+        private const val ARG_TITLE = "lottery_title"
 
-        fun newInstance(index: Int): LotteryFragment {
+        fun newInstance(code: String, title: String): LotteryFragment {
             return LotteryFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_INDEX, index)
+                    putString(ARG_CODE, code)
+                    putString(ARG_TITLE, title)
                 }
             }
         }
@@ -36,7 +41,8 @@ class LotteryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        resultIndex = arguments?.getInt(ARG_INDEX, 0) ?: 0
+        lotteryCode = arguments?.getString(ARG_CODE, "") ?: ""
+        lotteryTitle = arguments?.getString(ARG_TITLE, "") ?: ""
     }
 
     override fun onCreateView(
@@ -51,12 +57,33 @@ class LotteryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val result = SampleData.getAllResults().getOrNull(resultIndex) ?: return
-        displayResult(result)
+        loadFromApi()
 
         binding.swipeRefresh.setOnRefreshListener {
-            displayResult(result)
-            binding.swipeRefresh.isRefreshing = false
+            loadFromApi()
+        }
+    }
+
+    private fun loadFromApi() {
+        thread {
+            try {
+                val apiResponse = LotteryApi.fetchResults()
+                val results = LotteryApi.convertToResults(apiResponse)
+                val result = results.find { it.lotteryCode == lotteryCode }
+
+                activity?.runOnUiThread {
+                    binding.swipeRefresh.isRefreshing = false
+                    if (result != null) {
+                        displayResult(result)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("LotteryFragment", "API error", e)
+                activity?.runOnUiThread {
+                    binding.swipeRefresh.isRefreshing = false
+                    Toast.makeText(context, "Failed to refresh", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -73,51 +100,18 @@ class LotteryFragment : Fragment() {
         val inflater = LayoutInflater.from(requireContext())
         val cardView = inflater.inflate(R.layout.item_draw_card, container, false)
 
-        // Title
         val tvTitle = cardView.findViewById<TextView>(R.id.tvTitle)
         tvTitle.text = title
 
-        // Session badge
         val tvSession = cardView.findViewById<TextView>(R.id.tvSession)
-        tvSession.text = draw.session.khmer
+        tvSession.text = draw.timeSlot
+        tvSession.background = ContextCompat.getDrawable(requireContext(), R.drawable.session_badge_bg)
 
-        val sessionBg = if (draw.session == Session.MORNING) {
-            ContextCompat.getDrawable(requireContext(), R.drawable.session_morning_bg)
-        } else {
-            ContextCompat.getDrawable(requireContext(), R.drawable.session_evening_bg)
-        }
-        tvSession.background = sessionBg
-
-        // Date
         val tvDate = cardView.findViewById<TextView>(R.id.tvDate)
         tvDate.text = "Date:  ${draw.date}"
 
-        // Prize rows
         val prizeContainer = cardView.findViewById<LinearLayout>(R.id.prizeContainer)
 
-        // Add special numbers first for evening (if present: ??? If A + ??? If A)
-        if (draw.specialNumbers != null) {
-            val specialView = inflater.inflate(R.layout.item_special_numbers, prizeContainer, false)
-
-            val prizeAValues = draw.specialNumbers.prizeAValues
-            if (prizeAValues.size >= 3) {
-                specialView.findViewById<TextView>(R.id.tvSpecial1).text = prizeAValues[0]
-                specialView.findViewById<TextView>(R.id.tvSpecial2).text = prizeAValues[1]
-                specialView.findViewById<TextView>(R.id.tvSpecial3).text = prizeAValues[2]
-            }
-
-            val twoDigits = draw.specialNumbers.twoDigitValues
-            if (twoDigits.size >= 4) {
-                specialView.findViewById<TextView>(R.id.tvDigit1).text = twoDigits[0]
-                specialView.findViewById<TextView>(R.id.tvDigit2).text = twoDigits[1]
-                specialView.findViewById<TextView>(R.id.tvDigit3).text = twoDigits[2]
-                specialView.findViewById<TextView>(R.id.tvDigit4).text = twoDigits[3]
-            }
-
-            prizeContainer.addView(specialView)
-        }
-
-        // Regular prize rows
         for ((index, prize) in draw.prizes.withIndex()) {
             if (prize.twoDigit.isEmpty() && prize.threeDigit.isEmpty()) continue
 
@@ -127,7 +121,6 @@ class LotteryFragment : Fragment() {
             rowView.findViewById<TextView>(R.id.tvTwoDigit).text = prize.twoDigit
             rowView.findViewById<TextView>(R.id.tvThreeDigit).text = prize.threeDigit
 
-            // Alternate row background
             if (index % 2 == 1) {
                 rowView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.row_alt_bg))
             }
@@ -135,26 +128,7 @@ class LotteryFragment : Fragment() {
             prizeContainer.addView(rowView)
         }
 
-        // Message banners
-        if (draw.session == Session.MORNING) {
-            addMessageBanner(prizeContainer, "??????????? ???????????????!!!", R.color.green_accent, Color.WHITE)
-            addMessageBanner(prizeContainer, "??????????????????????????????????!", R.color.red_primary, Color.WHITE)
-        } else {
-            addMessageBanner(prizeContainer, "????????! ?????????????????", R.color.blue_banner, Color.WHITE)
-            addMessageBanner(prizeContainer, "???! ????????????????!", R.color.red_primary, Color.WHITE)
-        }
-
         container.addView(cardView)
-    }
-
-    private fun addMessageBanner(container: LinearLayout, text: String, bgColorRes: Int, textColor: Int) {
-        val inflater = LayoutInflater.from(requireContext())
-        val bannerView = inflater.inflate(R.layout.item_message_banner, container, false)
-        val tvMessage = bannerView.findViewById<TextView>(R.id.tvMessage)
-        tvMessage.text = text
-        tvMessage.setTextColor(textColor)
-        tvMessage.setBackgroundColor(ContextCompat.getColor(requireContext(), bgColorRes))
-        container.addView(bannerView)
     }
 
     override fun onDestroyView() {

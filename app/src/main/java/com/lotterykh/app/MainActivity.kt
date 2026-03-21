@@ -2,11 +2,14 @@ package com.lotterykh.app
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.lotterykh.app.data.SampleData
+import com.lotterykh.app.data.LotteryApi
 import com.lotterykh.app.databinding.ActivityMainBinding
+import com.lotterykh.app.model.LotteryResult
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,15 +22,8 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        val results = SampleData.getAllResults()
-        val adapter = LotteryPagerAdapter(this, results)
-        binding.viewPager.adapter = adapter
+        loadData()
 
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = results[position].title
-        }.attach()
-
-        // Request Play Integrity token on launch
         PlayIntegrityHelper(this).requestIntegrityToken { token, error ->
             if (token != null) {
                 Log.d("MainActivity", "Play Integrity token received")
@@ -35,5 +31,32 @@ class MainActivity : AppCompatActivity() {
                 Log.w("MainActivity", "Play Integrity failed: $error")
             }
         }
+    }
+
+    private fun loadData() {
+        thread {
+            try {
+                val apiResponse = LotteryApi.fetchResults()
+                val results = LotteryApi.convertToResults(apiResponse)
+
+                runOnUiThread {
+                    setupTabs(results)
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Failed to fetch data", e)
+                runOnUiThread {
+                    Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun setupTabs(results: List<LotteryResult>) {
+        val adapter = LotteryPagerAdapter(this, results)
+        binding.viewPager.adapter = adapter
+
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = results[position].title
+        }.attach()
     }
 }

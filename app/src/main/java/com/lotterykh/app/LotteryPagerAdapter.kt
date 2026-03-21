@@ -13,6 +13,7 @@ class LotteryPagerAdapter(
     override fun getItemCount(): Int = results.size
 
     override fun createFragment(position: Int): Fragment {
-        return LotteryFragment.newInstance(position)
+        val result = results[position]
+        return LotteryFragment.newInstance(result.lotteryCode, result.title)
     }
 }
