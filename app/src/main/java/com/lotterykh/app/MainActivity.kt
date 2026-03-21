@@ -1,6 +1,7 @@
 package com.lotterykh.app
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -25,5 +26,14 @@ class MainActivity : AppCompatActivity() {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = results[position].title
         }.attach()
+
+        // Request Play Integrity token on launch
+        PlayIntegrityHelper(this).requestIntegrityToken { token, error ->
+            if (token != null) {
+                Log.d("MainActivity", "Play Integrity token received")
+            } else {
+                Log.w("MainActivity", "Play Integrity failed: $error")
+            }
+        }
     }
 }
