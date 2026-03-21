@@ -1,4 +1,4 @@
-# Lottery KH - Cambodian Lottery Results App (??????? If ??? If ??? If )
+# Lottery KH - Cambodian Lottery Results App (លទ្ធផលឆ្នោត)
 
 Android app displaying Khmer lottery results for Vietnam and Malaysia draws.
 
