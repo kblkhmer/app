@@ -8,7 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.lotterykh.app"
+        applicationId = "com.homelottery.app"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -21,11 +21,10 @@ android {
 
     signingConfigs {
         create("release") {
-            // To sign for release, create a keystore and update these:
-            // storeFile = file("keystore/release.jks")
-            // storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
-            // keyAlias = System.getenv("KEY_ALIAS") ?: ""
-            // keyPassword = System.getenv("KEY_PASSWORD") ?: ""
+            storeFile = file("keystore/upload.jks")
+            storePassword = "pass123"
+            keyAlias = "lottery-kh"
+            keyPassword = "pass123"
         }
     }
 
@@ -37,7 +36,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
