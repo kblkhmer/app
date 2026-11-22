@@ -1,18 +1,25 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+}
+
+// Signing secrets live in local.properties (git-ignored), never in this file.
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
 }
 
 android {
     namespace = "com.lotterykh.app"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.homelottery.app"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 4
-        versionName = "1.1.0"
+        targetSdk = 36
+        versionCode = 12
+        versionName = "1.4.0"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -22,9 +29,9 @@ android {
     signingConfigs {
         create("release") {
             storeFile = file("keystore/upload.jks")
-            storePassword = "pass123"
-            keyAlias = "lottery-kh"
-            keyPassword = "pass123"
+            storePassword = localProperties.getProperty("RELEASE_STORE_PASSWORD")
+            keyAlias = localProperties.getProperty("RELEASE_KEY_ALIAS", "lottery-kh")
+            keyPassword = localProperties.getProperty("RELEASE_KEY_PASSWORD")
         }
     }
 
@@ -44,9 +51,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     buildFeatures {
         viewBinding = true
     }
@@ -64,4 +68,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("com.google.android.play:integrity:1.4.0")
+    implementation("com.google.android.play:app-update:2.1.0")
+    implementation("androidx.work:work-runtime:2.9.1")
+    implementation("androidx.activity:activity-ktx:1.10.1")
+    implementation("io.coil-kt:coil:2.7.0")
+    implementation("io.coil-kt:coil-gif:2.7.0")
 }

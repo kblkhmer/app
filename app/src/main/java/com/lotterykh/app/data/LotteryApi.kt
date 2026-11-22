@@ -9,10 +9,11 @@ import java.net.URL
 
 object LotteryApi {
 
-    private const val API_URL = "http://localhost:8080/"
+    private const val API_URL = "https://bkhlottery.cc/admin/api/result.php"
 
-    fun fetchResults(): ApiResponse {
-        val url = URL(API_URL)
+    fun fetchResults(date: String? = null): ApiResponse {
+        val urlStr = if (date != null) "$API_URL?date=$date" else API_URL
+        val url = URL(urlStr)
         val conn = url.openConnection() as HttpURLConnection
         conn.requestMethod = "GET"
         conn.connectTimeout = 15000

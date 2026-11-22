@@ -2,19 +2,21 @@ package com.lotterykh.app
 
 import android.app.Dialog
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.VideoView
 import androidx.fragment.app.DialogFragment
+import coil.load
 import com.lotterykh.app.model.Ad
-import java.net.URL
-import kotlin.concurrent.thread
 
 class AdPopupDialog : DialogFragment() {
 
@@ -33,6 +35,15 @@ class AdPopupDialog : DialogFragment() {
             }
             dialog.arguments = args
             return dialog
+        }
+
+        private fun getMediaType(url: String): String {
+            val lower = url.lowercase()
+            return when {
+                lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".3gp") -> "video"
+                lower.endsWith(".gif") -> "gif"
+                else -> "image"
+            }
         }
     }
 
@@ -56,42 +67,28 @@ class AdPopupDialog : DialogFragment() {
         dialog.setContentView(view)
 
         val adImage = view.findViewById<android.widget.ImageView>(R.id.adImage)
+        val adVideo = view.findViewById<VideoView>(R.id.adVideo)
         val btnClose = view.findViewById<android.widget.ImageButton>(R.id.btnClose)
 
-        // Load image in background
-        thread {
-            try {
-                val url = URL(ad!!.imageUrl)
-                val conn = url.openConnection()
-                conn.connectTimeout = 10000
-                conn.readTimeout = 10000
-                val bitmap = BitmapFactory.decodeStream(conn.inputStream)
-                adImage.post {
-                    if (isAdded) {
-                        adImage.setImageBitmap(bitmap)
-                    }
-                }
-            } catch (_: Exception) {
-                adImage.post {
-                    if (isAdded) dismissAllowingStateLoss()
-                }
-            }
+        val mediaType = getMediaType(ad!!.imageUrl)
+
+        when (mediaType) {
+            "video" -> loadVideo(adVideo, adImage)
+            else -> loadImage(adImage) // Coil decodes both static images and GIFs
         }
 
-        // Click image to open link
-        adImage.setOnClickListener {
+        // Click to open link
+        val clickListener = View.OnClickListener {
             val linkUrl = ad?.linkUrl
             if (!linkUrl.isNullOrEmpty()) {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(linkUrl))
-                startActivity(intent)
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(linkUrl)))
             }
             dismissAllowingStateLoss()
         }
+        adImage.setOnClickListener(clickListener)
+        adVideo.setOnClickListener(clickListener)
 
-        // Close button
-        btnClose.setOnClickListener {
-            dismissAllowingStateLoss()
-        }
+        btnClose.setOnClickListener { dismissAllowingStateLoss() }
 
         // Auto-dismiss after duration
         val duration = (ad?.duration ?: 10) * 1000L
@@ -104,6 +101,33 @@ class AdPopupDialog : DialogFragment() {
 
         dialog.setCanceledOnTouchOutside(true)
         return dialog
+    }
+
+    private fun loadImage(adImage: android.widget.ImageView) {
+        // Coil downloads, downsamples, decodes (including GIFs) and caches off the main thread.
+        adImage.load(ad!!.imageUrl, ImageLoaders.get(requireContext())) {
+            listener(
+                onSuccess = { _, result -> (result.drawable as? Animatable)?.start() },
+                onError = { _, result ->
+                    Log.w("AdPopupDialog", "Failed to load ad image: ${result.throwable.message}")
+                    if (isAdded) dismissAllowingStateLoss()
+                }
+            )
+        }
+    }
+
+    private fun loadVideo(adVideo: VideoView, adImage: android.widget.ImageView) {
+        adImage.visibility = View.GONE
+        adVideo.visibility = View.VISIBLE
+        adVideo.setVideoURI(Uri.parse(ad!!.imageUrl))
+        adVideo.setOnPreparedListener { mp ->
+            mp.isLooping = true
+            mp.start()
+        }
+        adVideo.setOnErrorListener { _, _, _ ->
+            if (isAdded) dismissAllowingStateLoss()
+            true
+        }
     }
 
     override fun onStart() {

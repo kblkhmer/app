@@ -43,6 +43,13 @@ data class ApiGroup(
     val resultLo: String? = null
 )
 
+// Predictions models
+data class PredictionResponse(
+    val date: String,
+    val numbers2d: List<String>,
+    val numbers3d: List<String>
+)
+
 // Ads models
 data class AdsResponse(
     val total: Int,

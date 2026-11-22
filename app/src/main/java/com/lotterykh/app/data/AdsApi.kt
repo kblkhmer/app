@@ -7,10 +7,20 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import java.net.URLEncoder
 
 object AdsApi {
 
-    private const val ADS_URL = "http://localhost:8080/ads"
+    private const val ADS_URL = "https://bkhlottery.cc/admin/api/ads.php"
+    private const val MEDIA_PROXY = ""
+
+    private fun proxyUrl(originalUrl: String): String {
+        return if (ADS_URL.startsWith("http://localhost")) {
+            MEDIA_PROXY + URLEncoder.encode(originalUrl, "UTF-8")
+        } else {
+            originalUrl
+        }
+    }
 
     fun fetchAds(): AdsResponse {
         val url = URL(ADS_URL)
@@ -41,7 +51,7 @@ object AdsApi {
                 Ad(
                     id = obj.getInt("id"),
                     title = obj.optString("title", ""),
-                    imageUrl = obj.getString("image_url"),
+                    imageUrl = proxyUrl(obj.getString("image_url")),
                     linkUrl = obj.optString("link_url", ""),
                     position = obj.optString("position", "popup"),
                     duration = obj.optInt("duration", 10),

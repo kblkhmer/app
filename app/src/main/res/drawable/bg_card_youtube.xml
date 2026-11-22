@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <gradient
+                android:angle="315"
+                android:endColor="#C4001D"
+                android:startColor="#FF1744" />
+        </shape>
+    </item>
+    <!-- soft highlight in the top-right corner -->
+    <item
+        android:gravity="top|end"
+        android:width="72dp"
+        android:height="72dp"
+        android:top="-20dp"
+        android:right="-20dp">
+        <shape android:shape="oval">
+            <solid android:color="#1FFFFFFF" />
+        </shape>
+    </item>
+</layer-list>

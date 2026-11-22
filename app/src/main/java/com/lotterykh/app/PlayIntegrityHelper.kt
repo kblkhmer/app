@@ -12,7 +12,7 @@ class PlayIntegrityHelper(private val context: Context) {
     companion object {
         private const val TAG = "PlayIntegrity"
         private const val API_KEY = "AQ.Ab8RN6KVTE8dzqJGh1o00EIXsRPCC20FGdxO8EMH859RuonR8Q"
-        private const val CLOUD_PROJECT_NUMBER = 0L // Set your Google Cloud project number
+        private const val CLOUD_PROJECT_NUMBER = 444483720383L
     }
 
     fun interface IntegrityCallback {

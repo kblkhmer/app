@@ -12,6 +12,12 @@
         android:scaleType="fitCenter"
         android:contentDescription="@string/ad_image_desc" />
 
+    <VideoView
+        android:id="@+id/adVideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
     <ImageButton
         android:id="@+id/btnClose"
         android:layout_width="36dp"

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!-- ??? If A special row: 3 three-digit numbers -->
+    <!-- បុស If A special row: 3 three-digit numbers -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:text="??? If A"
+            android:text="បុស If A"
             android:textColor="#333333"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -57,7 +57,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- ??? If A row: 4 two-digit numbers -->
+    <!-- ពីខ If A row: 4 two-digit numbers -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:text="??? If A"
+            android:text="ពីខ If A"
             android:textColor="#333333"
             android:textSize="16sp"
             android:textStyle="bold" />
